@@ -4,14 +4,6 @@ let isValid = require("./auth_users.js").isValid;
 let users = require("./auth_users.js").users;
 const public_users = express.Router();
 
-const findBooksWithIsbn = (isbn) => {
-  let booksWithIsbn = books.filter((book) => {
-    return book.isbn === isbn;
-  });
-
-  return booksWithIsbn;
-};
-
 public_users.post("/register", (req, res) => {
   //Write your code here
   return res.status(300).json({ message: "Yet to be implemented" });
@@ -33,8 +25,15 @@ public_users.get("/isbn/:isbn", function (req, res) {
 
 // Get book details based on author
 public_users.get("/author/:author", function (req, res) {
-  //Write your code here
-  return res.status(300).json({ message: "Yet to be implemented" });
+  const author = req.params.author;
+  const filteredBooks = Object.values(books).filter(
+    (book) => book.author === author
+  );
+  if (filteredBooks.length > 0) {
+    res.status(200).send(JSON.stringify(filteredBooks, null, 2));
+  } else {
+    res.status(404).json({ message: "Books by this author not found" });
+  }
 });
 
 // Get all books based on title
