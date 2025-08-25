@@ -67,15 +67,17 @@ public_users.get("/isbn/:isbn", async function (req, res) {
 });
 
 // Get book details based on author
-public_users.get("/author/:author", function (req, res) {
+public_users.get("/author/:author", async function (req, res) {
   const author = req.params.author;
-  const filteredBooks = Object.values(books).filter(
-    (book) => book.author === author
-  );
-  if (filteredBooks.length > 0) {
-    res.status(200).send(JSON.stringify(filteredBooks, null, 2));
-  } else {
-    res.status(404).json({ message: "Books by this author not found" });
+  try {
+    const response = await axios.get(`URL_TO_GET_BOOKS_BY_AUTHOR/${author}`);
+    const booksByAuthor = response.data;
+    res.status(200).json(booksByAuthor);
+  } catch (error) {
+    res.status(500).json({
+      message: "Error fetching books by this author",
+      error: error.message,
+    });
   }
 });
 
