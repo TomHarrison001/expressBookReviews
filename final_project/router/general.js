@@ -53,13 +53,16 @@ public_users.get("/", async function (req, res) {
 });
 
 // Get book details based on ISBN
-public_users.get("/isbn/:isbn", function (req, res) {
+public_users.get("/isbn/:isbn", async function (req, res) {
   const isbn = req.params.isbn;
-  const filteredBooks = [books[isbn]];
-  if (filteredBooks.length > 0) {
-    res.status(200).send(JSON.stringify(filteredBooks, null, 2));
-  } else {
-    res.status(404).json({ message: "Books with this ISBN not found" });
+  try {
+    const response = await axios.get(`URL_TO_GET_BOOKS_BY_ISBN/${isbn}`);
+    const book = response.data;
+    res.status(200).json(book);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Error fetching book details", error: error.message });
   }
 });
 
