@@ -17,9 +17,7 @@ public_users.get("/", function (req, res) {
 // Get book details based on ISBN
 public_users.get("/isbn/:isbn", function (req, res) {
   const isbn = req.params.isbn;
-  const filteredBooks = Object.values(books).filter(
-    (book) => book.isbn === isbn
-  );
+  const filteredBooks = [books[isbn]];
   if (filteredBooks.length > 0) {
     res.status(200).send(JSON.stringify(filteredBooks, null, 2));
   } else {
@@ -56,9 +54,7 @@ public_users.get("/title/:title", function (req, res) {
 //  Get book review
 public_users.get("/review/:isbn", function (req, res) {
   const isbn = req.params.isbn;
-  const filteredBooks = Object.values(books).filter(
-    (book) => book.isbn === isbn
-  );
+  const filteredBooks = [books[isbn]];
   if (filteredBooks.length > 0) {
     let review = filteredBooks[0].reviews;
     res.status(200).send(review);
